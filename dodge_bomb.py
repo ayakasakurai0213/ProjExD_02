@@ -8,16 +8,23 @@ def main():
     bg_img = pg.image.load("ex02/fig/pg_bg.jpg")
     kk_img = pg.image.load("ex02/fig/3.png")
     kk_img = pg.transform.rotozoom(kk_img, 0, 2.0)
+
+    # 爆弾
+    bb_img = pg.Surface((20, 20))
+    pg.draw.circle(bb_img, (255, 0, 0), (10, 10), 10)
+    bb_img.set_colorkey((0, 0, 0))
+
     tmr = 0
 
     while True:
         for event in pg.event.get():
-            if event.type == pg.QUIT: 
-                return 0
+            if event.type == pg.QUIT:           # ✕ボタンが押されたら
+                return 0                        # プログラム終了
 
         tmr += 1
         screen.blit(bg_img, [0, 0])
         screen.blit(kk_img, [900, 400])
+        screen.blit(bb_img, [100, 100])
 
         pg.display.update()
         clock.tick(1000)
