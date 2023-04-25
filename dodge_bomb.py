@@ -51,17 +51,17 @@ def main():
         bb_rct.move_ip(vx, vy)                  # 爆弾を動かす
 
         yoko, tate = check_bound(screen.get_rect(), bb_rct)
-        if not yoko:
+        if not yoko:        # 横方向にはみ出したら
             vx *= -1
-        elif not tate:
+        if not tate:        # 縦方向にはみ出したら
             vy *= -1
-            
         screen.blit(bb_img, bb_rct)             # 爆弾表示
+
+        if kk_rct.colliderect(bb_rct):          # こうかとんと爆弾が重なったら
+            return                              # プログラム終了
 
         pg.display.update()
         clock.tick(1000)
-
-        # print(x, y)
 
 # 画面内or画面外の判定をする関数
 def check_bound(scr_rct: pg.Rect, obj_rct: pg.Rect) -> tuple[bool, bool]:
