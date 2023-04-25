@@ -1,5 +1,6 @@
 import random
 import sys
+import time
 import pygame as pg
 
 # こうかとん移動量
@@ -18,21 +19,12 @@ def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((1600, 900))
     clock = pg.time.Clock()
+    fonto  = pg.font.Font(None, 150)
     bg_img = pg.image.load("ex02/fig/pg_bg.jpg")
     kk_img = pg.image.load("ex02/fig/3.png")
     kk_img = pg.transform.rotozoom(kk_img, 0, 2.0)
-    kk_img2 = pg.transform.flip(kk_img, True, False)
     kk_rct = kk_img.get_rect()
 
-    # こうかとんの向き
-    direction = {pg.transform.rotozoom(kk_img2, -90, 2.0): (0, -1),
-                 pg.transform.rotozoom(kk_img2, -45, 2.0): (1, -1),
-                 pg.transform.rotozoom(kk_img2, 0, 2.0): (1, 0),
-                 pg.transform.rotozoom(kk_img2, 45, 2.0): (1, 1),
-                 pg.transform.rotozoom(kk_img2, 90, 2.0): (0, 1),
-                 pg.transform.rotozoom(kk_img, 45, 2.0): (-1, 1),
-                 pg.transform.rotozoom(kk_img, 0, 2.0): (-1, 1),
-                 pg.transform.rotozoom(kk_img, -45, 2.0): (-1, -1)}
 
     # 爆弾
     bb_img = pg.Surface((20, 20))
@@ -63,18 +55,12 @@ def main():
                 if key_lst[k]:
                     kk_rct.move_ip(-mv[0], -mv[1])
 
-        for key, muki in direction.items():
-            if (vx, vy) is muki:
-                screen.blit(key, kk_rct)
-
         screen.blit(bg_img, [0, 0])             # 背景表示
         screen.blit(kk_img, kk_rct)             # こうかとん表示
 
         avx, avy = vx*speed[min(tmr//1000, 9)], vy*speed[min(tmr//1000, 9)]
         bb_rct.move_ip(avx, avy)                  # 爆弾を動かす
         
-        print(avx, avy)
-
         yoko, tate = check_bound(screen.get_rect(), bb_rct)
         if not yoko:        # 横方向にはみ出したら
             vx *= -1
@@ -84,6 +70,7 @@ def main():
 
         if kk_rct.colliderect(bb_rct):          # こうかとんと爆弾が重なったら
             return                              # プログラム終了
+        
 
         pg.display.update()
         clock.tick(1000)
@@ -105,6 +92,27 @@ def check_bound(scr_rct: pg.Rect, obj_rct: pg.Rect) -> tuple[bool, bool]:
         tate = False
 
     return yoko, tate
+
+# こうかとんの向きを変える関数を作ろうとして未完成
+"""
+def kokaton(x, y):
+    kk_img = pg.image.load("ex02/fig/3.png")
+    kk_img = pg.transform.rotozoom(kk_img, 0, 2.0)
+    kk_img2 = pg.transform.flip(kk_img, True, False)
+    # こうかとんの向き
+    direction = {pg.transform.rotozoom(kk_img2, -90, 2.0): (0, -1),
+                 pg.transform.rotozoom(kk_img2, -45, 2.0): (1, -1),
+                 pg.transform.rotozoom(kk_img2, 0, 2.0): (1, 0),
+                 pg.transform.rotozoom(kk_img2, 45, 2.0): (1, 1),
+                 pg.transform.rotozoom(kk_img2, 90, 2.0): (0, 1),
+                 pg.transform.rotozoom(kk_img, 45, 2.0): (-1, 1),
+                 pg.transform.rotozoom(kk_img, 0, 2.0): (-1, 1),
+                 pg.transform.rotozoom(kk_img, -45, 2.0): (-1, -1)}
+    for k, d in direction.items():
+        if d == (x, y):
+            muki = d
+    return k, muki
+"""
 
 if __name__ == "__main__":
     pg.init()
