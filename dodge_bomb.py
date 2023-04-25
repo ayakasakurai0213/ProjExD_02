@@ -61,7 +61,7 @@ def main():
                 screen.blit(key, kk_rct)
 
         screen.blit(bg_img, [0, 0])             # 背景表示
-        # screen.blit(kk_img, kk_rct)             # こうかとん表示
+        screen.blit(kk_img, kk_rct)             # こうかとん表示
         bb_rct.move_ip(vx, vy)                  # 爆弾を動かす
 
         yoko, tate = check_bound(screen.get_rect(), bb_rct)
