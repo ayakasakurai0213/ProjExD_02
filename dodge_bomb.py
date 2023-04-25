@@ -7,6 +7,12 @@ delta = {pg.K_UP: (0, -1),
          pg.K_DOWN: (0, +1), 
          pg.K_LEFT: (-1, 0), 
          pg.K_RIGHT: (+1, 0)}
+
+# speed
+speed = [a for a in range(1, 11)]
+print(speed)
+
+# avx, avy = vx*speed[min(tmr//1000, 9)], vy*speed[min(tmr//1000, 9)]
              
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -37,6 +43,7 @@ def main():
     bb_rct = bb_img.get_rect()  # rectクラスのsurface取得
     bb_rct.center = (x, y)      # centerの位置をランダムに設定
     
+    
     tmr = 0         # タイマー初期値
 
     while True:
@@ -62,7 +69,11 @@ def main():
 
         screen.blit(bg_img, [0, 0])             # 背景表示
         screen.blit(kk_img, kk_rct)             # こうかとん表示
-        bb_rct.move_ip(vx, vy)                  # 爆弾を動かす
+
+        avx, avy = vx*speed[min(tmr//1000, 9)], vy*speed[min(tmr//1000, 9)]
+        bb_rct.move_ip(avx, avy)                  # 爆弾を動かす
+        
+        print(avx, avy)
 
         yoko, tate = check_bound(screen.get_rect(), bb_rct)
         if not yoko:        # 横方向にはみ出したら
@@ -77,7 +88,7 @@ def main():
         pg.display.update()
         clock.tick(1000)
 
-        print(vx, vy)
+        # print(vx, vy)
 
 # 画面内or画面外の判定をする関数
 def check_bound(scr_rct: pg.Rect, obj_rct: pg.Rect) -> tuple[bool, bool]:
