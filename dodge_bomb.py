@@ -7,8 +7,7 @@ delta = {pg.K_UP: (0, -1),
          pg.K_DOWN: (0, +1), 
          pg.K_LEFT: (-1, 0), 
          pg.K_RIGHT: (+1, 0)}
-
-
+             
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((1600, 900))
@@ -16,7 +15,18 @@ def main():
     bg_img = pg.image.load("ex02/fig/pg_bg.jpg")
     kk_img = pg.image.load("ex02/fig/3.png")
     kk_img = pg.transform.rotozoom(kk_img, 0, 2.0)
+    kk_img2 = pg.transform.flip(kk_img, True, False)
     kk_rct = kk_img.get_rect()
+
+    # こうかとんの向き
+    direction = {pg.transform.rotozoom(kk_img2, -90, 2.0): (0, -1),
+                 pg.transform.rotozoom(kk_img2, -45, 2.0): (1, -1),
+                 pg.transform.rotozoom(kk_img2, 0, 2.0): (1, 0),
+                 pg.transform.rotozoom(kk_img2, 45, 2.0): (1, 1),
+                 pg.transform.rotozoom(kk_img2, 90, 2.0): (0, 1),
+                 pg.transform.rotozoom(kk_img, 45, 2.0): (-1, 1),
+                 pg.transform.rotozoom(kk_img, 0, 2.0): (-1, 1),
+                 pg.transform.rotozoom(kk_img, -45, 2.0): (-1, -1)}
 
     # 爆弾
     bb_img = pg.Surface((20, 20))
@@ -46,8 +56,12 @@ def main():
                 if key_lst[k]:
                     kk_rct.move_ip(-mv[0], -mv[1])
 
+        for key, muki in direction.items():
+            if (vx, vy) is muki:
+                screen.blit(key, kk_rct)
+
         screen.blit(bg_img, [0, 0])             # 背景表示
-        screen.blit(kk_img, kk_rct)             # こうかとん表示
+        # screen.blit(kk_img, kk_rct)             # こうかとん表示
         bb_rct.move_ip(vx, vy)                  # 爆弾を動かす
 
         yoko, tate = check_bound(screen.get_rect(), bb_rct)
@@ -62,6 +76,8 @@ def main():
 
         pg.display.update()
         clock.tick(1000)
+
+        print(vx, vy)
 
 # 画面内or画面外の判定をする関数
 def check_bound(scr_rct: pg.Rect, obj_rct: pg.Rect) -> tuple[bool, bool]:
