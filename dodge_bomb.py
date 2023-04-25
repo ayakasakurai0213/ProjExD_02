@@ -15,6 +15,9 @@ def main():
     pg.draw.circle(bb_img, (255, 0, 0), (10, 10), 10)
     bb_img.set_colorkey((0, 0, 0))
     x, y = random.randint(0, 1600), random.randint(0, 900)  # 爆弾のx, y座標
+    vx, vy = +1, +1             # 横方向、縦方向の速度
+    bb_rct = bb_img.get_rect()
+    
 
     tmr = 0
 
@@ -23,10 +26,12 @@ def main():
             if event.type == pg.QUIT:           # ✕ボタンが押されたら
                 return 0                        # プログラム終了
 
-        tmr += 1
+        tmr += 1    # 時間
+
         screen.blit(bg_img, [0, 0])
         screen.blit(kk_img, [900, 400])
-        screen.blit(bb_img, [x, y])
+        bb_rct.move_ip(vx, vy)
+        screen.blit(bb_img, bb_rct)
 
         pg.display.update()
         clock.tick(1000)
